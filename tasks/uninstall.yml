@@ -1,4 +1,5 @@
 ---
+
 - name: Check existence of uptime-kuma systemd service
   ansible.builtin.stat:
     path: "{{ devture_systemd_docker_base_systemd_path }}/{{ uptime_kuma_identifier }}.service"
@@ -17,4 +18,9 @@
     - name: Ensure uptime-kuma systemd service does not exist
       ansible.builtin.file:
         path: "{{ devture_systemd_docker_base_systemd_path }}/{{ uptime_kuma_identifier }}.service"
+        state: absent
+
+    - name: Ensure uptime-kuma path doesn't exist
+      ansible.builtin.file:
+        path: "{{ uptime_kuma_base_path }}"
         state: absent
