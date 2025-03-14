@@ -1,6 +1,6 @@
 #jinja2: lstrip_blocks: "True"
 [Unit]
-Description=uptime-kuma ({{ uptime_kuma_identifier }})
+Description=Uptime Kuma ({{ uptime_kuma_identifier }})
 {% for service in uptime_kuma_systemd_required_services_list %}
 Requires={{ service }}
 After={{ service }}

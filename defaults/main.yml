@@ -1,3 +1,10 @@
+# SPDX-FileCopyrightText: 2023 - 2024 Nikita Chernyi
+# SPDX-FileCopyrightText: 2023 - 2025 Slavi Pantaleev
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+
 ---
 
 # Project source code URL: https://github.com/louislam/uptime-kuma
@@ -11,13 +18,13 @@ uptime_kuma_gid: ''
 
 uptime_kuma_version: 1.23.16
 
-# The hostname at which uptime-kuma is served.
+# The hostname at which Uptime Kuma is served.
 uptime_kuma_hostname: ''
 
-# The path at which uptime-kuma is served.
+# The path at which Uptime Kuma is served.
 # This value must either be `/` or not end with a slash (e.g. `/kuma`).
 #
-# Hosting under a subpath is not possible yet due to uptime-kuma limitations.
+# Hosting under a subpath is not possible yet due to Uptime Kuma limitations.
 # See:
 # - https://github.com/louislam/uptime-kuma/issues/147
 # - https://github.com/louislam/uptime-kuma/pull/1092
