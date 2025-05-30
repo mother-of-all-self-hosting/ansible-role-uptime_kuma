@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-
 - name: Perform Uptime Kuma installation tasks
   tags:
     - setup-all
@@ -14,7 +13,6 @@
     - name: Validate Uptime Kuma configuration
       when: uptime_kuma_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
-
     - name: Install Uptime Kuma
       when: uptime_kuma_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
