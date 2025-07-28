@@ -24,6 +24,13 @@ traefik.http.middlewares.{{ uptime_kuma_identifier }}-strip-prefix.stripprefix.p
 {% set middlewares = middlewares + [uptime_kuma_identifier + '-strip-prefix'] %}
 {% endif %}
 
+{% if uptime_kuma_container_labels_traefik_additional_request_headers.keys() | length > 0 %}
+{% for name, value in uptime_kuma_container_labels_traefik_additional_request_headers.items() %}
+traefik.http.middlewares.{{ uptime_kuma_identifier }}-add-request-headers.headers.customrequestheaders.{{ name }}={{ value }}
+{% endfor %}
+{% set middlewares = middlewares + [uptime_kuma_identifier + '-add-request-headers'] %}
+{% endif %}
+
 {% if uptime_kuma_container_labels_traefik_additional_response_headers.keys() | length > 0 %}
 {% for name, value in uptime_kuma_container_labels_traefik_additional_response_headers.items() %}
 traefik.http.middlewares.{{ uptime_kuma_identifier }}-add-response-headers.headers.customresponseheaders.{{ name }}={{ value }}
