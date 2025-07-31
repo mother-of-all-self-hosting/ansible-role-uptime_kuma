@@ -26,7 +26,7 @@
 - name: Validate Uptime Kuma Traefik settings
   when: uptime_kuma_container_labels_traefik_enabled | bool
   block:
-    - name: Fail if required Uptime Kuma Traefik settings not defined
+    - name: Fail if Traefik settings required for Uptime Kuma are not defined
       ansible.builtin.fail:
         msg: >-
           You need to define a required configuration setting (`{{ item }}`).
