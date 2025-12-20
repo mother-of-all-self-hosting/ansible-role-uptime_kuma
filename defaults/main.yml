@@ -167,6 +167,9 @@ uptime_kuma_systemd_wanted_services_list_default: []
 uptime_kuma_systemd_wanted_services_list_auto: []
 uptime_kuma_systemd_wanted_services_list_custom: []
 
+# Specify the timezone
+uptime_kuma_environment_variables_tz: UTC
+
 uptime_kuma_container_dns_servers: "{{ uptime_kuma_container_dns_servers_default + uptime_kuma_container_dns_servers_custom }}"
 
 uptime_kuma_container_dns_servers_default:
