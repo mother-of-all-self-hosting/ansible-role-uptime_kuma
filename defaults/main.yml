@@ -108,7 +108,7 @@ uptime_kuma_container_labels_additional_labels_custom: {}
 # For non-Traefik setups, we use the default healthcheck interval (60s) to decrease overhead.
 uptime_kuma_container_health_interval: "{{ '5s' if uptime_kuma_container_labels_traefik_enabled else '60s' }}"
 
-# A list of extra arguments to pass to the container
+# A list of extra arguments to pass to the container (`docker create` command)
 uptime_kuma_container_extra_arguments: "{{ uptime_kuma_container_extra_arguments_auto + uptime_kuma_container_extra_arguments_custom }}"
 uptime_kuma_container_extra_arguments_auto: []
 uptime_kuma_container_extra_arguments_custom: []
