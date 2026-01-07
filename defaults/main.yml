@@ -96,6 +96,7 @@ uptime_kuma_container_labels_traefik_additional_response_headers_custom: {}
 uptime_kuma_container_labels_additional_labels: "{{ uptime_kuma_container_labels_additional_labels_auto + uptime_kuma_container_labels_additional_labels_custom }}"
 uptime_kuma_container_labels_additional_labels_auto: []
 uptime_kuma_container_labels_additional_labels_custom: []
+
 # Specifies how often the container health-check will run.
 #
 # For Traefik based setups, it's important that the interval is short,
