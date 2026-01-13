@@ -53,7 +53,7 @@ uptime_kuma_container_additional_networks_custom: []
 # uptime_kuma_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `../templates/labels.j2` for details.
 #
-# To inject your own other container labels, see `uptime_kuma_container_labels_additional_labels`.
+# To inject your own other container labels, see `uptime_kuma_container_labels_additional_labels_custom`.
 uptime_kuma_container_labels_traefik_enabled: true
 uptime_kuma_container_labels_traefik_docker_network: "{{ uptime_kuma_container_network }}"
 uptime_kuma_container_labels_traefik_hostname: "{{ uptime_kuma_hostname }}"
