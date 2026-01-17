@@ -24,6 +24,9 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --entrypoint="/usr/bin/dumb-init" \
       --cap-drop=ALL \
       --network={{ uptime_kuma_container_network }} \
+      {% if uptime_kuma_container_http_host_bind_port %}
+      -p {{ uptime_kuma_container_http_host_bind_port }}:{{ uptime_kuma_container_http_port }} \
+      {% endif %}
       {% for dns in uptime_kuma_container_dns_servers %}
       --dns={{ dns }} \
       {% endfor %}
