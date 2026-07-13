@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: 2026 Suguru Hirahara
+# SPDX-FileCopyrightText: 2026 spatterlight
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+- name: Verify Uptime Kuma systemd service
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Wait for Uptime Kuma service to become active (up to 180s)
+      ansible.builtin.systemd:
+        name: uptime-kuma.service
+      register: uptime_kuma_service
+      until: uptime_kuma_service.status.ActiveState == 'active'
+      retries: 36
+      delay: 5
+
+    - name: Assert Uptime Kuma service is active
+      ansible.builtin.assert:
+        that: uptime_kuma_service.status.ActiveState == 'active'
+        fail_msg: "uptime-kuma.service not active ({{ uptime_kuma_service.status.ActiveState }})"
+        success_msg: "uptime-kuma.service is active"
+
+    - name: Wait for Uptime Kuma HTTP endpoint to respond (up to 10m)
+      ansible.builtin.uri:
+        url: "http://localhost:3001/"
+        method: GET
+        status_code: [200, 302]
+        follow_redirects: none
+      register: uptime_kuma_endpoint
+      until: uptime_kuma_endpoint.status in [200, 302]
+      retries: 120
+      delay: 5
+
+    - name: Assert Uptime Kuma HTTP endpoint responds
+      ansible.builtin.assert:
+        that: uptime_kuma_endpoint.status in [200, 302]
+        fail_msg: "Uptime Kuma did not respond as expected ({{ uptime_kuma_endpoint.status | default('no response') }})"
+        success_msg: "Uptime Kuma responded with {{ uptime_kuma_endpoint.status }}"
+
+    - name: Show Uptime Kuma systemd service status summary
+      ansible.builtin.debug:
+        msg:
+          - "Uptime Kuma systemd: {{ uptime_kuma_service.status.ActiveState }}"
+          - "Uptime Kuma HTTP: {{ uptime_kuma_endpoint.status }}"

@@ -12,11 +12,8 @@ path = [
     ".github/renovate.json",
     ".gitignore",
     ".pre-commit-config.yaml",
-    ".python-version",
     ".yamllint.yml",
-    "meta/main.yml",
-    "molecule/**/requirements.yml",
-    "molecule/requirements.txt"
+    "meta/main.yml"
 ]
 SPDX-FileCopyrightText = "NONE"
 SPDX-License-Identifier = "CC0-1.0"
