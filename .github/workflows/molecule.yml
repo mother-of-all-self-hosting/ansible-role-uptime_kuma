@@ -49,14 +49,6 @@ jobs:
           path: ~/.ansible/collections
           key: ansible-collections-${{ hashFiles('uptime-kuma/molecule/default/requirements.yml') }}
 
-      - name: Install Ansible roles
-        working-directory: uptime-kuma
-        run: ansible-galaxy role install -r molecule/default/requirements.yml
-
-      - name: Install Ansible collections
-        working-directory: uptime-kuma
-        run: ansible-galaxy collection install -r molecule/default/requirements.yml
-
       - name: Run Molecule
         working-directory: uptime-kuma
         run: molecule test --scenario-name ${{ matrix.scenario }}
