@@ -113,7 +113,7 @@
 
     - name: Retrieve the Uptime Kuma container definition
       ansible.builtin.command:
-        cmd: docker inspect uptime-kuma
+        cmd: docker container inspect uptime-kuma
       register: uptime_kuma_container_inspect
       changed_when: false
 
