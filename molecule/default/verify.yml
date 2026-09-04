@@ -133,7 +133,7 @@
         fail_msg: "The configured container labels are missing: {{ uptime_kuma_container.Config.Labels }}"
         success_msg: "The configured container labels are applied to the running container"
 
-    - name: Show Uptime Kuma verification summary
+    - name: Show the Uptime Kuma verification summary
       ansible.builtin.debug:
         msg:
           - "Uptime Kuma systemd: {{ uptime_kuma_service.status.ActiveState }}"
