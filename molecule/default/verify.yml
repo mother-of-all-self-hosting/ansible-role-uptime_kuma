@@ -88,9 +88,7 @@
     - name: Assert the running Uptime Kuma is the version this role installs
       ansible.builtin.assert:
         that: uptime_kuma_report.info.version == uptime_kuma_defaults.uptime_kuma_version
-        fail_msg: >-
-          Uptime Kuma reports {{ uptime_kuma_report.info.version }},
-          expected {{ uptime_kuma_defaults.uptime_kuma_version }}
+        fail_msg: "Uptime Kuma reports {{ uptime_kuma_report.info.version | default('none') }}, expected {{ uptime_kuma_defaults.uptime_kuma_version }}"
         success_msg: "Uptime Kuma reports {{ uptime_kuma_report.info.version }}"
 
     # `uptime_kuma_environment_variables_tz` and
