@@ -113,12 +113,12 @@
     - name: Retrieve the Uptime Kuma container definition
       ansible.builtin.command:
         cmd: docker container inspect uptime-kuma
-      register: uptime_kuma_container_inspect
+      register: uptime_kuma_container_raw
       changed_when: false
 
     - name: Parse the Uptime Kuma container definition
       ansible.builtin.set_fact:
-        uptime_kuma_container: "{{ uptime_kuma_container_inspect.stdout | from_json | first }}"
+        uptime_kuma_container: "{{ uptime_kuma_container_raw.stdout | from_json | first }}"
 
     # `templates/labels.j2` is passed to the container as `--label-file`. The
     # scenario adds labels through
