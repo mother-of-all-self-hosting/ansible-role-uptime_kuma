@@ -18,21 +18,27 @@
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
         name: uptime_kuma_defaults
 
-    - name: Wait for Uptime Kuma service to become active (up to 180s)
-      ansible.builtin.systemd:
+    - name: Wait for the Uptime Kuma systemd service to become active (up to 180s)
+      ansible.builtin.systemd_service:
         name: uptime-kuma.service
       register: uptime_kuma_service
       until: uptime_kuma_service.status.ActiveState == 'active'
       retries: 36
       delay: 5
+      # So that giving up is reported by the assertion below rather than as a
+      # wall of systemd unit properties.
+      failed_when: false
 
-    - name: Assert Uptime Kuma service is active
+    # `Restart=always` in the systemd unit means that even a container which crashes
+    # and gets restarted reads as active here, so this is a precondition rather than
+    # a result.
+    - name: Assert the Uptime Kuma systemd service is active
       ansible.builtin.assert:
         that: uptime_kuma_service.status.ActiveState == 'active'
-        fail_msg: "uptime-kuma.service not active ({{ uptime_kuma_service.status.ActiveState }})"
+        fail_msg: "uptime-kuma.service is not active ({{ uptime_kuma_service.status.ActiveState }})"
         success_msg: "uptime-kuma.service is active"
 
-    - name: Retrieve Uptime Kuma service log for debugging
+    - name: Retrieve the Uptime Kuma systemd service log for debugging
       when: uptime_kuma_debug_service_enabled | bool
       ansible.builtin.command:
         cmd: journalctl -xeu uptime-kuma.service
