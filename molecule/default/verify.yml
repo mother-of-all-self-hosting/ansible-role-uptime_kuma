@@ -110,7 +110,7 @@
           Uptime Kuma runs with the configured timezone
           ({{ uptime_kuma_report.info.serverTimezone }}) and additional environment variables
 
-    - name: Retrieve the Uptime Kuma container definition
+    - name: Inspect the Uptime Kuma container
       ansible.builtin.command:
         cmd: docker container inspect uptime-kuma
       register: uptime_kuma_container_raw
