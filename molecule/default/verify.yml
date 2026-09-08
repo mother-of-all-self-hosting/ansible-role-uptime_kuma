@@ -41,7 +41,7 @@
     - name: Retrieve the Uptime Kuma systemd service log for debugging
       when: uptime_kuma_debug_service_enabled | bool
       ansible.builtin.command:
-        cmd: journalctl -xeu uptime-kuma.service
+        cmd: journalctl --no-pager --output=cat --unit=uptime-kuma.service
       changed_when: false
 
     # This only establishes that something is listening, and deliberately
