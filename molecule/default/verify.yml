@@ -10,6 +10,8 @@
   become: true
   gather_facts: false
   tasks:
+    - name: Verify that Uptime Kuma works
+      block:
     # The role is not included in this playbook, so its defaults are not in
     # scope. Reading defaults/main.yml directly ties the version assertion
     # below.
@@ -149,3 +151,19 @@
           - "Uptime Kuma admin created by this run: {{ uptime_kuma_report.setup_completed }}"
           - "Uptime Kuma timezone: {{ uptime_kuma_report.info.serverTimezone }}"
           - "Uptime Kuma container labels: {{ uptime_kuma_container.Config.Labels }}"
+
+      rescue:
+        # Whatever went wrong, the reason is almost always in the systemd service log.
+        - name: Retrieve the Uptime Kuma systemd service log
+          ansible.builtin.command:
+            cmd: journalctl --no-pager --output=cat --unit=uptime-kuma.service
+          register: uptime_kuma_service_log
+          changed_when: false
+
+        - name: Show the Uptime Kuma systemd service log
+          ansible.builtin.debug:
+            var: uptime_kuma_service_log.stdout_lines
+
+        - name: Fail because verification did not pass
+          ansible.builtin.fail:
+            msg: "Uptime Kuma verification failed. The systemd service log is printed above."
