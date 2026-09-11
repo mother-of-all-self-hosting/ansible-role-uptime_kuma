@@ -9,6 +9,11 @@
   hosts: all
   become: true
   gather_facts: false
+
+  vars:
+    uptime_kuma_verify_units:
+      - uptime-kuma.service
+
   tasks:
     - name: Verify that Uptime Kuma works
       block:
@@ -20,13 +25,14 @@
             file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
             name: uptime_kuma_defaults
 
-        - name: Wait for the Uptime Kuma systemd service to become active (up to 180s)
+        - name: Wait for the Uptime Kuma systemd services to become active (up to 180s each)
           ansible.builtin.systemd_service:
-            name: uptime-kuma.service
-          register: uptime_kuma_service
-          until: uptime_kuma_service.status.ActiveState == 'active'
+            name: "{{ item }}"
+          register: uptime_kuma_services
+          until: uptime_kuma_services.status.ActiveState == 'active'
           retries: 36
           delay: 5
+          loop: "{{ uptime_kuma_verify_units }}"
           # So that giving up is reported by the assertion below rather than as a
           # wall of systemd unit properties.
           failed_when: false
@@ -34,17 +40,20 @@
         # `Restart=always` in the systemd unit means that even a container which crashes
         # and gets restarted reads as active here, so this is a precondition rather than
         # a result.
-        - name: Assert the Uptime Kuma systemd service is active
+        - name: Assert the Uptime Kuma systemd services are active
           ansible.builtin.assert:
-            that: uptime_kuma_service.status.ActiveState == 'active'
-            fail_msg: "uptime-kuma.service is not active ({{ uptime_kuma_service.status.ActiveState }})"
-            success_msg: "uptime-kuma.service is active"
+            that: uptime_kuma_services.results | map(attribute='status.ActiveState') | unique | list == ['active']
+            fail_msg: >-
+              Not every service is active:
+              {{ dict(uptime_kuma_verify_units | zip(uptime_kuma_services.results | map(attribute='status.ActiveState'))) }}
+            success_msg: "Every systemd service is active"
 
-        - name: Retrieve the Uptime Kuma systemd service log for debugging
+        - name: Retrieve the Uptime Kuma systemd services log for debugging
           when: uptime_kuma_debug_service_enabled | bool
           ansible.builtin.command:
-            cmd: journalctl --no-pager --output=cat --unit=uptime-kuma.service
+            cmd: "journalctl --no-pager --output=cat --unit={{ item }}"
           changed_when: false
+          loop: "{{ uptime_kuma_verify_units }}"
 
         # This only establishes that something is listening, and deliberately
         # asserts nothing about it. Uptime Kuma answers 200 with the same
@@ -145,7 +154,7 @@
         - name: Show the Uptime Kuma verification summary
           ansible.builtin.debug:
             msg:
-              - "Uptime Kuma systemd: {{ uptime_kuma_service.status.ActiveState }}"
+              - "Uptime Kuma systemd: {% for unit, state in uptime_kuma_verify_units | zip(uptime_kuma_services.results | map(attribute='status.ActiveState')) %}{{ unit }} ({{ state }}){% if not loop.last %}, {% endif %}{% endfor %}"
               - "Uptime Kuma version: {{ uptime_kuma_report.info.version }}"
               - "Uptime Kuma setup wizard offered: {{ uptime_kuma_report.setup_offered }}"
               - "Uptime Kuma admin created by this run: {{ uptime_kuma_report.setup_completed }}"
